@@ -256,7 +256,25 @@ if __name__ == "__main__":
     # # ------------------ Exercițiul 6 ------------------
     # print(
     #     "6. Demonstreaza cum *args si **kwargs permit unui decorator sa fie folosit cu functii care au un numar variabil de argumente.")
-    # # Solutia
+
+    def decorator_flexibil(func):
+        def wrapper(*args, **kwargs):
+            print("Argumente pozitionale:", args)
+            print("Argumente cuvant-cheie:", kwargs)
+            return func(*args, **kwargs)
+
+        return wrapper
+
+
+    @decorator_flexibil
+    def functie_flexibila(*args, **kwargs):
+        print("Functie cu argumente variabile")
+
+
+    functie_flexibila(1, 2, 3, nume="Andrei", varsta=30)
+
+
+
     #
     # # ------------------ Exercițiul 7 ------------------
     # print("7. Utilizeaza *args si **kwargs pentru a crea un decorator care modifica argumentele unei functii.")
