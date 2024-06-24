@@ -26,11 +26,17 @@ if __name__=="__main__":
     # Problema 2: Suprascrie metoda sune() în clasa Mamifera pentru a modifica comportamentul acesteia.
     # Creează un alt obiect al clasei Mamifera și apelă din nou metoda sune(). Cum se comportă acum metoda?
 
+
+
     # Moștenire
     # Problema 1: Defineste o clasă bază numită FormaGeometrica cu un atribut laturi.
     # Implementează un constructor care initializează acest atribut.
     # Apoi, creează două clase derivate, Pentagon și Cerc, care moșteneesc de la FormaGeometrica.
     # Pentru fiecare clasă derivată, adaugă un constructor care setează valoarea atributului laturi într-un mod corespunzător.
+
+    class FormaGeometrica:
+        def __init__(self, laturi):
+            self.laturi = laturi
 
     # Problema 2: În clasa Cerc, suprascrie metoda __init__ pentru a permite definirea razei cercului în loc de laturile sale.
     # Demonstrează cum poți crea un obiect al clasei Cerc folosind noul constructor definit.
