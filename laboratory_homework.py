@@ -81,7 +81,23 @@ if __name__ == "__main__":
 
     # 3. Display University faculties.
 
+    all_faculties = [
+        Faculty("MasterFood", "MF", [], "FOOD_TECHNOLOGY"),
+        Faculty("FoodTechnology", "FT", [], "FOOD_TECHNOLOGY"),
+        Faculty("FoodScience", "FS", [], "FOOD_TECHNOLOGY"),
+        Faculty("Architect", "AR", [], "URBANISM_ARCHITECTURE"),
+        Faculty("Vaterinary", "VT", [], "VETERINARY_MEDICINE")
+    ]
+
+    for faculty in all_faculties:
+        print(f"{faculty.name} ({faculty.abbreviation})")
+
     # 4. Display all faculties belonging to a field. (Ex. FOOD_TECHNOLOGY)
+
+    def get_faculties_by_field(field):
+        return [faculty for faculty in all_faculties if faculty.studyField == field]
+
+    food_tech_faculties = get_faculties_by_field("FOOD_TECHNOLOGY")
 
 
 
