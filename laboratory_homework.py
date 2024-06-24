@@ -98,6 +98,8 @@ if __name__ == "__main__":
         return [faculty for faculty in all_faculties if faculty.studyField == field]
 
     food_tech_faculties = get_faculties_by_field("FOOD_TECHNOLOGY")
+    for faculty in food_tech_faculties:
+        print(f"Faculty {faculty.name} belongs to FOOD_TECHNOLOGY.")
 
 
 
