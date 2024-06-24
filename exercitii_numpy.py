@@ -183,7 +183,31 @@ if __name__ == "__main__":
     Aceasta va permite identificarea tendințelor sezoniere și a lunilor cu calitate scăzută a aerului.
     """
 
+    import pandas as pd
 
+    # Încărcați setul de date din fișierul CSV (no2_concentratii.csv)
+    # Presupunem că coloanele sunt numite "data" și "no2"
+
+    df = pd.read_csv("/Users/vadimoala/Documents/GitHub/tekwillacademy/no2_concentratii.csv", parse_dates=["data"])
+
+    # Calculați concentrația medie anuală de NO2
+    media_anuala_no2 = df["no2"].mean()
+
+    # Găsiți înregistrarea cu cea mai mare valoare de NO2
+    max_no2 = df.loc[df["no2"].idxmax()]
+
+    # Numărați zilele cu concentrații peste limita legală (de exemplu, 40 µg/m³)
+    zile_peste_limita = (df["no2"] > 40).sum()
+
+    # Calculați media concentrației lunare de NO2
+    media_lunara_no2 = df.groupby(df["data"].dt.month)["no2"].mean()
+
+    # Afișați rezultatele
+    print(f"Concentrația medie anuală de NO2: {media_anuala_no2:.2f} µg/m³")
+    print(f"Ziua cu concentrația maximă de NO2: {max_no2['data'].date()} ({max_no2['no2']:.2f} µg/m³)")
+    print(f"Numărul de zile cu concentrații peste limita legală: {zile_peste_limita}")
+    print("Media concentrației lunare de NO2:")
+    print(media_lunara_no2)
 
 
 
