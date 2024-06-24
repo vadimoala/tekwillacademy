@@ -71,6 +71,8 @@ if __name__ == "__main__":
                     return faculty
         return None
 
+    # 3. Display University faculties.
+
 
 
 
