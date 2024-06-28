@@ -31,14 +31,10 @@
 #
 
 
-
 import pandas as pd
 
 # Incarcam fisierul CSV intr-un DataFrame
 df = pd.read_csv('no2_concentratii.csv')
-
-# Vizualizam primele cateva inregistrari pentru a intelege structura datelor
-print(df.head())
 
 # Calculam concentratia media anuala de NO2
 concentratie_medie_anuala = df['no2'].mean()
