@@ -6,7 +6,7 @@ from streamlit_folium import folium_static
 
 
 def get_weather(city):
-    api_key = "d374b0a46ff3fd614ed6c7e315287160"  
+    api_key = "d374b0a46ff3fd614ed6c7e315287160"
     base_url = "https://api.openweathermap.org/data/2.5/weather"
     params = {"q": city, "appid": api_key, "units": "metric"}
 
