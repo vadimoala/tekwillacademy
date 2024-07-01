@@ -22,6 +22,12 @@ weather_icons = {
     "ploaie deasă": "https://img.icons8.com/color/96/000000/rainfall.png"
 }
 
+
+with st.echo():
+    import streamlit as st
+    from streamlit_folium import folium_static
+    import folium
+
 def get_weather(city):
     api_key = "d374b0a46ff3fd614ed6c7e315287160"
     base_url = "https://api.openweathermap.org/data/2.5/weather"
