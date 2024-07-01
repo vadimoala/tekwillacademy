@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
-import folium
 from streamlit_folium import folium_static
+import folium
+
 
 
 weather_icons = {
@@ -32,17 +33,17 @@ def get_weather(city):
     if response.status_code == 200:
         weather_description = data["weather"][0]["description"]
         temperature = data["main"]["temp"]
-        umiditatea = data["main"]["humidity"]
+        humidity = data["main"]["humidity"]
         coordinates = data["coord"]
-        return weather_description, temperature, umiditatea, coordinates
+        return weather_description, temperature, humidity, coordinates
     else:
-        return None, None, None
+        return None, None, None, None
 
 def main():
     st.title("Vremea")
     city_name = st.text_input("Introdu orasul dorit:")
 
-    if st.button("Verifică vremea"):
+    if st.button("Verifica"):
         weather_description, temperature, umiditatea, coordinates = get_weather(city_name)
         if weather_description and temperature and umiditatea and coordinates:
             st.write(f"În {city_name.capitalize()} este {weather_description} "
@@ -52,7 +53,7 @@ def main():
             if weather_description in weather_icons:
                 st.image(weather_icons[weather_description], width=50)
             else:
-                st.write("Nu avem o imagine pentru această stare a vremii.")
+                None
 
 
             map = folium.Map(location=[coordinates["lat"], coordinates["lon"]], zoom_start=15)
