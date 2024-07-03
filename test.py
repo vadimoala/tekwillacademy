@@ -27,6 +27,23 @@ def get_weather(city):
 def main():
     st.title("Prognoza Meteo")
 
+    # Imagine de fundal
+    background_image_url = "https://amateurphotographer.com/wp-content/uploads/sites/7/2023/03/dmitry-bessonov-unsplash_1024px.jpg"
+    st.markdown(
+        f"""
+           <style>
+           .stApp {{
+               background-image: url({background_image_url});
+               background-size: cover;
+               background-position: center;
+               background-repeat: no-repeat;
+               background-attachment: fixed;
+           }}
+           </style>
+           """,
+        unsafe_allow_html=True
+    )
+
     # Bara laterală (stânga)
     with st.sidebar:
         with st.form(key="weather_form"):
