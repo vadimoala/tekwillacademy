@@ -62,10 +62,10 @@ def main():
     )
 
     # Bara laterală (stânga)
-    with st.sidebar:
-        with st.form(key="weather_form"):
-            city_name = st.text_input("Introdu orașul dorit:")
-            submit_button = st.form_submit_button(label="Verifică vremea")
+
+    with st.form(key="weather_form"):
+        city_name = st.text_input("Introdu orașul dorit:")
+        submit_button = st.form_submit_button(label="Verifică vremea")
 
     # Rezultate (mijloc)
     if submit_button:
