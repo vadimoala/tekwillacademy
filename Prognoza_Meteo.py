@@ -68,20 +68,22 @@ def get_weather(city):
 # Rezultatele (mesaj pe mijloc)
 def display_weather(city, description, temp, humidity, wind_speed, pressure, local_time):
     if description and temp is not None:
-        st.write(f"În {city.capitalize()} este {description} și temperatura este de {temp:.1f} °C.")
-        st.write(f"Umiditatea este de {humidity}%.")
-        st.write(f"Viteza vântului este de {wind_speed} m/s.")
-        st.write(f"Presiunea atmosferică este de {pressure} hPa.")
-        st.write(f"Data și ora locală: {local_time}.")
+        st.markdown(f"<p style='color:white;'>În {city.capitalize()} este {description} și temperatura este de "
+                    f"{temp:.1f} °C.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:white;'>Umiditatea este de {humidity}%.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:white;'>Viteza vântului este de {wind_speed} m/s.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:white;'>Presiunea atmosferică este de {pressure} hPa.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:white;'>Data și ora locală: {local_time}.</p>", unsafe_allow_html=True)
         if description in weather_icons:
             st.image(weather_icons[description], width=50)
         if description in weather_messages:
-            st.write(f"Mesaj: {weather_messages[description]}")
+            st.markdown(f"<p style='color:white;'>Mesaj: {weather_messages[description]}</p>", unsafe_allow_html=True)
     else:
-        st.write("Nu am putut găsi informații despre vreme pentru orașul introdus.")
+        st.markdown("<p style='color:white;'>Nu am putut găsi informații despre vreme pentru orașul introdus.</p>",
+                    unsafe_allow_html=True)
 
 def main():
-    st.title("Prognoza Meteo")
+    st.markdown("<h1 style='color:white;'>Prognoza Meteo</h1>", unsafe_allow_html=True)
 
     # Imagine de fundal
     background_image_url = "https://amateurphotographer.com/wp-content/uploads/sites/7/2023/03/dmitry-bessonov-unsplash_1024px.jpg"
