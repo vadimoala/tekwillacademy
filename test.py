@@ -48,6 +48,7 @@ def get_weather(city):
         response = requests.get(base_url, params=params)
         response.raise_for_status()
         data = response.json()
+        country = data["sys"]["country"]
         weather_description = data["weather"][0]["description"]
         temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
@@ -61,7 +62,7 @@ def get_weather(city):
         local_time = utc_time + timedelta(seconds=timezone_offset)
         local_time_str = local_time.strftime('%Y-%m-%d %H:%M:%S')
 
-        return weather_description, temperature, humidity, wind_speed, pressure, local_time_str, data["coord"]
+        return country, weather_description, temperature, humidity, wind_speed, pressure, local_time_str, data["coord"]
     except requests.exceptions.RequestException as e:
         st.error(f"Error fetching data: {e}")
         return None, None, None, None, None, None, None
@@ -90,8 +91,9 @@ def get_forecast(city):
         st.error(f"Error fetching data: {e}")
         return None
 
-def display_weather(city, description, temp, humidity, wind_speed, pressure, local_time):
+def display_weather(city, country, description, temp, humidity, wind_speed, pressure, local_time):
     if description and temp is not None:
+        st.markdown(f"<h2 style='color:white;'>{city.capitalize()}, {country}</h2>", unsafe_allow_html=True)
         st.markdown(f"<p style='color:white;'>În {city.capitalize()} este {description} și temperatura este de "
                     f"{temp:.1f} °C.</p>", unsafe_allow_html=True)
         st.markdown(f"<p style='color:white;'>Umiditatea este de {humidity}%.</p>", unsafe_allow_html=True)
@@ -118,7 +120,7 @@ def display_forecast(forecast_data):
 
         st.plotly_chart(fig)
 
-        # Create a DataFrame for the forecast data
+
         forecast_df = pd.DataFrame({
             "Date": dates,
             "Temperature (°C)": temperatures,
@@ -178,8 +180,8 @@ def main():
             submit_button = st.form_submit_button(label="Verifică Vremea")
 
     if submit_button:
-        weather_description, temperature, humidity, wind_speed, pressure, local_time, coord = get_weather(city_name)
-        display_weather(city_name, weather_description, temperature, humidity, wind_speed, pressure, local_time)
+        country, weather_description, temperature, humidity, wind_speed, pressure, local_time, coord = get_weather(city_name)
+        display_weather(city_name, country, weather_description, temperature, humidity, wind_speed, pressure, local_time)
         forecast_data = get_forecast(city_name)
         display_forecast(forecast_data)
         display_map(city_name, coord)
