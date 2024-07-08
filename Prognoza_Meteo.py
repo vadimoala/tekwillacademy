@@ -77,7 +77,7 @@ def display_weather(city, description, temp, humidity, wind_speed, pressure, loc
         if description in weather_icons:
             st.image(weather_icons[description], width=50)
         if description in weather_messages:
-            st.markdown(f"<p style='color:white;'>Mesaj: {weather_messages[description]}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p style='color:white;'>Nota: {weather_messages[description]}</p>", unsafe_allow_html=True)
     else:
         st.markdown("<p style='color:white;'>Nu am putut găsi informații despre vreme pentru orașul introdus.</p>",
                     unsafe_allow_html=True)
@@ -86,7 +86,8 @@ def main():
     st.markdown("<h1 style='color:white;'>Prognoza Meteo</h1>", unsafe_allow_html=True)
 
     # Imagine de fundal
-    background_image_url = "https://amateurphotographer.com/wp-content/uploads/sites/7/2023/03/dmitry-bessonov-unsplash_1024px.jpg"
+    background_image_url = ("https://amateurphotographer.com/wp-content/uploads/sites/7/2023/03/"
+                            "dmitry-bessonov-unsplash_1024px.jpg")
     st.markdown(
         f"""
            <style>
