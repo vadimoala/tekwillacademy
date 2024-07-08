@@ -1,7 +1,9 @@
 import streamlit as st
 import requests
 from datetime import datetime, timedelta
-
+import plotly.graph_objs as go
+import plotly.express as px
+import pandas as pd
 
 weather_icons = {
     "cer senin": "https://img.icons8.com/color/96/000000/sun--v1.png",
@@ -37,7 +39,7 @@ weather_messages = {
     "ploaie deasă": "Ploaie deasă. Asigură-te că ai echipament de ploaie."
 }
 
-
+    # Extragere informatii generale
 def get_weather(city):
     api_key = "d374b0a46ff3fd614ed6c7e315287160"
     base_url = "https://api.openweathermap.org/data/2.5/weather"
@@ -61,22 +63,46 @@ def get_weather(city):
         local_time = utc_time + timedelta(seconds=timezone_offset)
         local_time_str = local_time.strftime('%Y-%m-%d %H:%M:%S')
 
-        return country, weather_description, temperature, humidity, wind_speed, pressure, local_time_str
+        return country, weather_description, temperature, humidity, wind_speed, pressure, local_time_str, data["coord"]
     except requests.exceptions.RequestException as e:
         st.error(f"Error fetching data: {e}")
-        return None, None, None, None, None, None
+        return None, None, None, None, None, None, None
 
+    # Extragere informatii pentru grafic
+def get_forecast(city):
+    api_key = "d374b0a46ff3fd614ed6c7e315287160"
+    base_url = "https://api.openweathermap.org/data/2.5/forecast"
+    params = {"q": city, "appid": api_key, "units": "metric", "lang": "ro"}
 
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()
+        data = response.json()
 
-# Rezultatele (mesaj pe mijloc)
-def display_weather(city, country,description, temp, humidity, wind_speed, pressure, local_time):
+        forecast_data = []
+        for entry in data["list"]:
+            timestamp = entry["dt"]
+            temperature = entry["main"]["temp"]
+            description = entry["weather"][0]["description"]
+            utc_time = datetime.utcfromtimestamp(timestamp)
+            local_time = utc_time + timedelta(seconds=data["city"]["timezone"])
+            forecast_data.append((local_time, temperature, description))
+
+        return forecast_data
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error fetching data: {e}")
+        return None
+
+    # Mesajul de afisare rezultate
+def display_weather(city, country, description, temp, humidity, wind_speed, pressure, local_time):
     if description and temp is not None:
         st.markdown(f"<h2 style='color:white;'>{city.capitalize()}, {country}</h2>", unsafe_allow_html=True)
         st.markdown(f"<p style='color:white;'>În {city.capitalize()} este {description} și temperatura este de "
                     f"{temp:.1f} °C.</p>", unsafe_allow_html=True)
         st.markdown(f"<p style='color:white;'>Umiditatea este de {humidity}%.</p>", unsafe_allow_html=True)
         st.markdown(f"<p style='color:white;'>Viteza vântului este de {wind_speed} m/s.</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:white;'>Presiunea atmosferică este de {pressure} hPa.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:white;'>Presiunea atmosferică este de {pressure} hPa.</p>",
+                    unsafe_allow_html=True)
         st.markdown(f"<p style='color:white;'>Data și ora locală: {local_time}.</p>", unsafe_allow_html=True)
         if description in weather_icons:
             st.image(weather_icons[description], width=50)
@@ -86,10 +112,51 @@ def display_weather(city, country,description, temp, humidity, wind_speed, press
         st.markdown("<p style='color:white;'>Nu am putut găsi informații despre vreme pentru orașul introdus.</p>",
                     unsafe_allow_html=True)
 
+    # Graficul pe 5 zile
+def display_forecast(forecast_data):
+    if forecast_data:
+        dates = [entry[0] for entry in forecast_data]
+        temperatures = [entry[1] for entry in forecast_data]
+        descriptions = [entry[2] for entry in forecast_data]
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=dates, y=temperatures, mode='lines+markers', name='Temperature'))
+
+        st.plotly_chart(fig)
+
+        forecast_df = pd.DataFrame({
+            "Date": dates,
+            "Temperature (°C)": temperatures,
+            "Description": descriptions
+        })
+
+        st.dataframe(forecast_df)
+
+        csv = forecast_df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="Descarcă prognoza meteo",
+            data=csv,
+            file_name=f'forecast_{datetime.now().strftime("%Y%m%d%H%M%S")}.csv',
+            mime='text/csv',
+        )
+
+    else:
+        st.markdown(
+            "<p style='color:white;'>Nu am putut găsi informații despre prognoza meteo pentru orașul introdus.</p>",
+            unsafe_allow_html=True)
+
+    # Locatia
+def display_map(city, coord):
+    if coord:
+        map_url = f"https://maps.google.com/maps?q={coord['lat']},{coord['lon']}&z=15&output=embed"
+        st.markdown(f"<iframe src='{map_url}' width='100%' height='500'></iframe>", unsafe_allow_html=True)
+    else:
+        st.markdown("<p style='color:white;'>Nu am putut găsi coordonatele pentru orașul introdus.</p>",
+                    unsafe_allow_html=True)
+
+    # Primul antet(numele paginii)
 def main():
     st.markdown("<h1 style='color:white;'>Prognoza Meteo</h1>", unsafe_allow_html=True)
-
-
 
     # Imagine de fundal
     background_image_url = ("https://amateurphotographer.com/wp-content/uploads/sites/7/2023/03/"
@@ -115,10 +182,12 @@ def main():
             city_name = st.text_input("Introduceți orașul dorit:")
             submit_button = st.form_submit_button(label="Verifică Vremea")
 
-
     if submit_button:
-        country, weather_description, temperature, humidity, wind_speed, pressure, local_time = get_weather(city_name)
+        country, weather_description, temperature, humidity, wind_speed, pressure, local_time, coord = get_weather(city_name)
         display_weather(city_name, country, weather_description, temperature, humidity, wind_speed, pressure, local_time)
+        forecast_data = get_forecast(city_name)
+        display_forecast(forecast_data)
+        display_map(city_name, coord)
 
 if __name__ == "__main__":
     main()
