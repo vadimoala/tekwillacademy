@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit_lectie as st
 import requests
 from datetime import datetime, timedelta
 import plotly.graph_objs as go
