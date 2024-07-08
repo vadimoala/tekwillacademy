@@ -5,6 +5,7 @@ import plotly.graph_objs as go
 import plotly.express as px
 import pandas as pd
 
+
 weather_icons = {
     "cer senin": "https://img.icons8.com/color/96/000000/sun--v1.png",
     "cer acoperit de nori": "https://img.icons8.com/color/96/000000/clouds.png",
