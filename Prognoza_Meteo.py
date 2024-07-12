@@ -159,8 +159,7 @@ def main():
     st.markdown("<h1 style='color:white;'>Prognoza Meteo</h1>", unsafe_allow_html=True)
 
     # Imagine de fundal
-    background_image_url = ("https://amateurphotographer.com/wp-content/uploads/sites/7/2023/03/"
-                            "dmitry-bessonov-unsplash_1024px.jpg")
+    background_image_url = ("https://i.pinimg.com/originals/fe/bc/bb/febcbb34fcead6b3ac7894baea63b1a9.jpg")
     st.markdown(
         f"""
            <style>
